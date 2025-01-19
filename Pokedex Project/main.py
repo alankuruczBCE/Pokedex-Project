@@ -27,6 +27,7 @@ def hide_me(event):
 
 #Search function
 def search_():
+    scrollbar.pack(side="right", fill="y")
     query = entry.get()
 
     result = search_pokemon_(data, query)
@@ -60,24 +61,31 @@ def filter_pokemon_():
 
     for index, row in filteredData.iterrows():
         name = row["Name"]
-        button = ctk.CTkButton(frameButtons, fg_color = "#147285", corner_radius=3,text = name, width = 40, command = lambda name = name: on_button_click(name))
+        type1 = row["Type 1"]
+        button = ctk.CTkButton(frameButtons, fg_color = "#147285",
+                               corner_radius=3,text = name, width = 40,
+                               command = lambda name = name,
+                                                type1 = type1:
+                               on_button_click(name, type1))
         button.pack(pady=5)
 
     frameButtons.grid_propagate(True)
-    canvas.pack_forget()
     canvas.pack( fill = "both", expand = True)
-    canvas.config(scrollregion=frameButtons.bbox("all"))
+    canvas.configure(scrollregion=canvas.bbox("all"))
 
 
-def on_button_click(name):
+def on_button_click(name, type1):
     global currentScene
+    scrollbar.pack_forget()
     for widget in frameButtons.winfo_children():
         widget.destroy()
     currentScene = "PokeDetails"
     framePokeDetails.pack(side = "top", anchor = "nw", padx = 10, pady = 10)
     pokeNameLabel.pack(padx = 5, pady = 5)
     pokeNameLabel.configure(text = "Name: " + name)
-    frameButtons.configure(height = 900, width = 1200)
+    pokeTypeLabel.pack(padx = 5, pady = 5)
+    pokeTypeLabel.configure(text = "Type: " + type1)
+    canvas.configure(scrollregion=canvas.bbox("all"))
 
 
 def on_mouse_wheel(event):
@@ -91,14 +99,15 @@ def combobox_callback(choice):
 def back_button_():
     global currentScene
     if currentScene == "Main":
+        frameButtons.configure(height=900, width=1200)
         print()
     if currentScene == "PokeDetails":
         print("detail")
-        frameButtons.configure(height=900, width=1200)
         pokeNameLabel.pack_forget()
         framePokeDetails.pack_forget()
         for widget in frameButtons.winfo_children():
             widget.destroy()
+        scrollbar.pack(side="right", fill="y")
         currentScene = "Main"
     if currentScene == "PokeList":
         frameButtons.configure(height=900, width=1200)
@@ -192,10 +201,11 @@ framePokeDetails.pack(side = "top", anchor = "nw", padx = 10, pady = 10)
 framePokeDetails.pack_forget()
 #Create the search button
 pokeNameLabel = ctk.CTkLabel(framePokeDetails, text = "No Name Set")
-pokeNameLabel.pack(padx = 5, pady = 5)
+pokeNameLabel.pack_forget()
+pokeTypeLabel = ctk.CTkLabel(framePokeDetails, text = "No Type Set")
 pokeNameLabel.pack_forget()
 
-
+frameButtons.configure(height=900, width=1200)
 
 resultLabel = ctk.CTkLabel(root,text="",justify="left",font=(font1, 10))
 resultLabel.place(x=20,y=100)
