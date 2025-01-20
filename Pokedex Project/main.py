@@ -12,7 +12,7 @@ import customtkinter as ctk
 pokedex = "pokemon_data.csv"
 data = pd.read_csv(pokedex)
 currentScene = "Main"
-
+fail = 1
 
 
 def hide_me(event):
@@ -32,6 +32,7 @@ def search_():
     result = search_pokemon_(data, query)
 
     if result:
+        textFail.configure(text = "")
         pokeNameString = f"Name: {result["Name"]}"
         pokeTypeString = f"Type: {result["Type 1"]}"
 
@@ -43,6 +44,7 @@ def filter_pokemon_():
     global currentScene
     global frameButtons
     frameButtons.configure(height=900, width=1200)
+    textFail.pack_forget()
     if currentScene == "PokeDetails":
         pokeNameLabel.pack_forget()
         framePokeDetails.pack_forget()
@@ -113,6 +115,7 @@ def back_button_():
         frameButtons.configure(height=900, width=1200)
         print()
     if currentScene == "PokeDetails":
+        textFail.pack(pady=300)
         print("detail")
         framePokeDetails.pack_forget()
         for widget in frameButtons.winfo_children():
@@ -120,6 +123,7 @@ def back_button_():
         canvas.update_idletasks()
         currentScene = "Main"
     if currentScene == "PokeList":
+        textFail.pack(pady=300)
         frameButtons.configure(height=900, width=1200)
         for widget in frameButtons.winfo_children():
             widget.destroy()
@@ -206,6 +210,9 @@ frameButtons.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.
 root.bind_all("<MouseWheel>", on_mouse_wheel)
 #
 
+textFail = ctk.CTkLabel(canvas, text = "Search for a Pokemon")
+textFail.pack(pady = 300)
+
 framePokeDetails = ctk.CTkFrame(canvas, width = 1200, height = 900)
 framePokeDetails.pack(side = "top", anchor = "nw", padx = 10, pady = 10)
 framePokeDetails.pack_forget()
@@ -225,5 +232,7 @@ resultLabel.pack_forget()
 typeLabel = ttk.Label(root,text="",justify="left",font=(font1, 10))
 typeLabel.place(x=20,y=130)
 typeLabel.pack_forget()
+
+
 
 root.mainloop()
