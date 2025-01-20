@@ -69,6 +69,7 @@ def filter_pokemon_():
                                on_button_click(name, type1))
         button.pack(pady=5)
 
+    canvas.update_idletasks()
     frameButtons.grid_propagate(True)
     canvas.pack( fill = "both", expand = True)
     canvas.configure(scrollregion=canvas.bbox("all"))
@@ -76,7 +77,6 @@ def filter_pokemon_():
 
 def on_button_click(name, type1):
     global currentScene
-    scrollbar.pack_forget()
     for widget in frameButtons.winfo_children():
         widget.destroy()
     currentScene = "PokeDetails"
@@ -107,7 +107,7 @@ def back_button_():
         framePokeDetails.pack_forget()
         for widget in frameButtons.winfo_children():
             widget.destroy()
-        scrollbar.pack(side="right", fill="y")
+        canvas.update_idletasks()
         currentScene = "Main"
     if currentScene == "PokeList":
         frameButtons.configure(height=900, width=1200)
