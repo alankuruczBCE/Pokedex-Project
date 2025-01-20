@@ -1,6 +1,10 @@
 import pandas as pd
 from tkinter import font
 import matplotlib as mp
+from customtkinter import CTkCanvas
+from matplotlib import pyplot as plt
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 from window_functions import search_pokemon_
 from PIL import ImageFont
@@ -12,19 +16,13 @@ import customtkinter as ctk
 pokedex = "pokemon_data.csv"
 data = pd.read_csv(pokedex)
 currentScene = "Main"
-fail = 1
+
 
 
 def hide_me(event):
     event.widget.pack_forget()
 
-#pack() WILL BRING BACK THE HIDDEN ELEMENT
 
-#btn=Button(root, text="Click")
-#btn.bind('<Button-1>', hide_me)
-#btn.pack()    THIS IS AN EXAMPLE OF ITS USAGE
-
-#Search function
 def search_():
     scrollbar.pack(side="right", fill="y")
     query = entry.get()
@@ -32,7 +30,6 @@ def search_():
     result = search_pokemon_(data, query)
 
     if result:
-        textFail.configure(text = "")
         pokeNameString = f"Name: {result["Name"]}"
         pokeTypeString = f"Type: {result["Type 1"]}"
 
@@ -44,7 +41,7 @@ def filter_pokemon_():
     global currentScene
     global frameButtons
     frameButtons.configure(height=900, width=1200)
-    textFail.pack_forget()
+    typeDistButton.pack_forget()
     if currentScene == "PokeDetails":
         pokeNameLabel.pack_forget()
         framePokeDetails.pack_forget()
@@ -115,7 +112,7 @@ def back_button_():
         frameButtons.configure(height=900, width=1200)
         print()
     if currentScene == "PokeDetails":
-        textFail.pack(pady=300)
+        typeDistButton.pack(pady = 10, padx = 10, side = "top", anchor = "w")
         print("detail")
         framePokeDetails.pack_forget()
         for widget in frameButtons.winfo_children():
@@ -123,16 +120,14 @@ def back_button_():
         canvas.update_idletasks()
         currentScene = "Main"
     if currentScene == "PokeList":
-        textFail.pack(pady=300)
+        typeDistButton.pack(pady = 10, padx = 10, side = "top", anchor = "w")
         frameButtons.configure(height=900, width=1200)
         for widget in frameButtons.winfo_children():
             widget.destroy()
         currentScene = "Main"
+    if currentScene == "Graph":
+        pass
 
-
-def graph_button_():
-    remove_pokemon_()
-    currentScene = "Graphs"
 
 
 #Create the window
@@ -143,6 +138,49 @@ def remove_pokemon_():
 
 def hide_me_(event):
     event.widget.pack_forget()
+
+
+
+def graph_():
+
+
+    typesCombined = pd.concat([data["Type 1"], data["Type 2"]])
+    valueCount = typesCombined.value_counts()
+    print(valueCount)
+
+    colours = {
+        'Fire': 'red',
+        'Water': 'blue',
+        'Electric': 'yellow',
+        'Grass': 'green',
+        'Poison': 'purple',
+        'Dragon': 'orange',
+        'Fairy': 'pink',
+        'Normal': 'brown',
+        'Flying': 'lightblue',
+        'Psychic': 'pink',
+        'Bug': 'yellow',
+        'Ground': 'brown',
+        'Rock': 'grey',
+        'Fighting': 'orange',
+        'Dark': 'black',
+        'Steel': 'grey',
+        'Ghost': 'purple',
+        'Ice': 'lightblue'
+    }
+
+    colour2 = [colours.get(type_, 'grey') for type_ in valueCount.index]
+
+    plt.figure(figsize=(12, 8))
+    valueCount.plot(kind='bar', color=colour2)
+
+    # Set chart title and labels
+    plt.title('Count of Each Type (Type 1 + Type 2)', fontsize=16)
+    plt.xlabel('Type', fontsize=12)
+    plt.ylabel('Count', fontsize=12)
+
+    # Display the plot
+    plt.show()
 
 
 
@@ -210,8 +248,7 @@ frameButtons.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.
 root.bind_all("<MouseWheel>", on_mouse_wheel)
 #
 
-textFail = ctk.CTkLabel(canvas, text = "Search for a Pokemon")
-textFail.pack(pady = 300)
+
 
 framePokeDetails = ctk.CTkFrame(canvas, width = 1200, height = 900)
 framePokeDetails.pack(side = "top", anchor = "nw", padx = 10, pady = 10)
@@ -233,6 +270,7 @@ typeLabel = ttk.Label(root,text="",justify="left",font=(font1, 10))
 typeLabel.place(x=20,y=130)
 typeLabel.pack_forget()
 
-
+typeDistButton = ctk.CTkButton(canvas, text = "Type Distribution Graph", command = graph_)
+typeDistButton.pack(pady = 10, padx = 10, side = "top", anchor = "w")
 
 root.mainloop()
