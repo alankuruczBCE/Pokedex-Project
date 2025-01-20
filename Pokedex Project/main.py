@@ -8,7 +8,6 @@ from tkinter import ttk
 import tkinter as tk
 import customtkinter as ctk
 
-import sv_ttk
 #Read the csv and put into a variable
 pokedex = "pokemon_data.csv"
 data = pd.read_csv(pokedex)
@@ -62,11 +61,15 @@ def filter_pokemon_():
     for index, row in filteredData.iterrows():
         name = row["Name"]
         type1 = row["Type 1"]
+        type2 = row.get("Type 2", None)
+        hp = row["HP"]
         button = ctk.CTkButton(frameButtons, fg_color = "#147285",
                                corner_radius=3,text = name, width = 40,
                                command = lambda name = name,
-                                                type1 = type1:
-                               on_button_click(name, type1))
+                                                type1 = type1,
+                               type2 = type2,
+                               hp = hp:
+                               on_button_click(name, type1, type2, hp))
         button.pack(pady=5)
 
     canvas.update_idletasks()
@@ -75,16 +78,24 @@ def filter_pokemon_():
     canvas.configure(scrollregion=canvas.bbox("all"))
 
 
-def on_button_click(name, type1):
+def on_button_click(name, type1, type2, hp):
     global currentScene
     for widget in frameButtons.winfo_children():
         widget.destroy()
     currentScene = "PokeDetails"
     framePokeDetails.pack(side = "top", anchor = "nw", padx = 10, pady = 10)
     pokeNameLabel.pack(padx = 5, pady = 5)
+    pokeTypeLabel.pack(padx=5, pady=5)
+    pokeType2Label.pack(padx=5, pady=5)
+    pokeHpLabel.pack(padx=5, pady=5)
     pokeNameLabel.configure(text = "Name: " + name)
-    pokeTypeLabel.pack(padx = 5, pady = 5)
     pokeTypeLabel.configure(text = "Type: " + type1)
+    if type2:
+        pokeType2Label.configure(text = "Type 2: None")
+    else:
+        pokeType2Label.configure(text = "Type 2: " + type2)
+    pokeHpLabel.configure(text = "HP: " + str(hp))
+
     canvas.configure(scrollregion=canvas.bbox("all"))
 
 
@@ -103,7 +114,6 @@ def back_button_():
         print()
     if currentScene == "PokeDetails":
         print("detail")
-        pokeNameLabel.pack_forget()
         framePokeDetails.pack_forget()
         for widget in frameButtons.winfo_children():
             widget.destroy()
@@ -204,6 +214,8 @@ pokeNameLabel = ctk.CTkLabel(framePokeDetails, text = "No Name Set")
 pokeNameLabel.pack_forget()
 pokeTypeLabel = ctk.CTkLabel(framePokeDetails, text = "No Type Set")
 pokeNameLabel.pack_forget()
+pokeType2Label = ctk.CTkLabel(framePokeDetails, text = "No Type 2 Set")
+pokeHpLabel = ctk.CTkLabel(framePokeDetails, text = "No HP Value Set")
 
 frameButtons.configure(height=900, width=1200)
 
