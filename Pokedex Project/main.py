@@ -16,21 +16,11 @@ import customtkinter as ctk
 pokedex="pokemon_data.csv"
 data=pd.read_csv(pokedex)
 currentScene="Main"
+pokeChoice="Type"
+
 
 def hide_me(event):
     event.widget.pack_forget()
-
-
-def search_():
-    scrollbar.pack(side="right", fill="y")
-    query=entry.get()
-    result=search_pokemon_(data, query)
-
-    if result:
-        pokeNameString=f"Name: {result["Name"]}"
-        pokeTypeString=f"Type: {result["Type 1"]}"
-    resultLabel.config(text=pokeNameString)
-    typeLabel.config(text=pokeTypeString)
 
 
 def filter_pokemon_():
@@ -43,11 +33,17 @@ def filter_pokemon_():
         framePokeDetails.pack_forget()
     currentScene="PokeList"
     query=entry.get().strip().lower()
-    filteredData=data[
-        data['Type 1'].str.lower().str.contains(query) |
-        data['Type 2'].str.lower().str.contains(query)
-    ]
-    filteredData=filteredData.drop_duplicates(subset=['Name', 'Type 1', 'Type 2'])
+    if pokeChoice=="Type":
+        filteredData=data[
+            data['Type 1'].str.lower().str.contains(query) |
+            data['Type 2'].str.lower().str.contains(query)
+        ]
+    elif pokeChoice=="Name":
+        filteredData=data[
+            data['Name'].str.lower().str.contains(query)
+        ]
+    filteredData=filteredData.drop_duplicates(subset=[
+        'Name','Type 1','Type 2'])
     #Destroys all buttons from previous query
     remove_pokemon_()
     for index,row in filteredData.iterrows():
@@ -198,12 +194,21 @@ def graph_():
     plt.show()
 
 
+def poke_type_change(choice):
+    global pokeChoice
+    pokeChoice = choice
+
 root=ctk.CTk()
 root.title("Pokedex")
 root.geometry("600x600")
 root.configure(bg="#b34448",fg_color="#b34448")
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
+
+richBlack = "#0C1821"
+lavender = "#CCC9DC"
+lavenderDark = "#928DAE"
+airForceBlue = "#61819D"
 #set theme here!!!!
 fontPath="JUST Sans Regular.otf"
 customFont=ImageFont.truetype(fontPath,10)
@@ -211,20 +216,28 @@ fontName=customFont.getname()[0]
 font1=font.Font(family = fontName, size = 10)
 #Create the title label
 
-searchFrame=ctk.CTkFrame(root,fg_color="#380b0d",bg_color="#380b0d",border_width=0)
+searchFrame=ctk.CTkFrame(root,fg_color="#000000",bg_color="#000000",border_width=0)
 searchFrame.pack(fill="x")
 label=ctk.CTkLabel(searchFrame,text="Pokedex")
 label.pack(pady=10)
 #Create the entry field
 
-entry=ctk.CTkEntry(searchFrame,width=450)
-entry.pack(side="left",padx=10,pady=5)
+entry=ctk.CTkEntry(searchFrame,width=370)
+entry.pack(side="left",padx=5,pady=5)
 
 searchButton=ctk.CTkButton(searchFrame,text="Search",
                              command=filter_pokemon_,
-                          width=150,fg_color="#963035")
-searchButton.pack(side="left",padx=10,pady=5)
+                          width=100,fg_color=lavender,
+                           text_color="#000000")
+searchButton.pack(side="left",padx=5,pady=5)
 
+pokeTypeSelector=ctk.CTkOptionMenu(searchFrame,values=["Name",
+                "Type"],command=poke_type_change,width=100,
+                fg_color=lavender, text_color="#000000",
+                button_color=lavenderDark,
+                                   button_hover_color=lavenderDark)
+pokeTypeSelector.pack(side="left",padx=5,pady=5)
+pokeTypeSelector.set("Type")
 #comboboxVar = ttk.StringVar(value="Type")
 #combobox = tk.ComboBox(searchFrame, values=["Type", "Name"],
                        #    command=combobox_callback,
@@ -238,7 +251,7 @@ searchButton.pack(side="left",padx=10,pady=5)
 canvas=tk.Canvas(root,bg="#b34448",borderwidth=0,highlightthickness=0)
 canvas.pack(fill="both",expand=True)
 
-backFrame=ctk.CTkFrame(root)
+backFrame=ctk.CTkFrame(root, corner_radius=0, bg_color="#000000")
 backFrame.pack(fill = "x")
 backButton=ctk.CTkButton(backFrame,text="Home",command=back_button_,
                         width = 200,)
