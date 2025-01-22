@@ -36,7 +36,7 @@ def filter_pokemon_():
     if currentScene=="PokeDetails":
         pokeNameLabel.pack_forget()
         framePokeDetails.pack_forget()
-        frameSpiderButton.pack_forget()
+        spiderButton.pack_forget()
     currentScene="PokeList"
     query=entry.get().strip().lower()
     if pokeChoice=="Type":
@@ -95,8 +95,8 @@ def on_button_click(
     global nameX,type1X,type2X,hpX,atkX,defenseX,spAtkX,spDefX,spdX,genX,legX
     remove_pokemon_()
     currentScene="PokeDetails"
-    framePokeDetails.pack(side="top",anchor="ne",padx=10,pady=10)
-    frameSpiderButton.pack(side='top',anchor='nw',padx=10,pady=10)
+    framePokeDetails.pack(side="right",anchor="n",padx=10,pady=10)
+    spiderButton.pack(side="left",anchor="n",padx=10,pady=10)
     count=0
     nameX=name
     type1X=type1
@@ -161,7 +161,7 @@ def back_button_():
         typeDistButton.pack(pady=10,padx=10,side="top",anchor="w")
         print("detail")
         framePokeDetails.pack_forget()
-        frameSpiderButton.pack_forget()
+        spiderButton.pack_forget()
         remove_pokemon_()
         canvas.update_idletasks()
         currentScene="Main"
@@ -294,17 +294,15 @@ lambda e:canvas.configure(scrollregion=canvas.bbox("all")))
 root.bind_all("<MouseWheel>",on_mouse_wheel)
 
 framePokeDetails=ctk.CTkFrame(canvas)
-framePokeDetails.pack(side="top",anchor="ne",padx=10,pady=10)
+framePokeDetails.pack(side="right",anchor="n",padx=10,pady=10)
 framePokeDetails.pack_forget()
 
-frameSpiderButton=ctk.CTkFrame(canvas)
-frameSpiderButton.pack(side="top",anchor="nw",padx=10,pady=10)
-frameSpiderButton.pack_forget()
-
-spiderButton=ctk.CTkButton(frameSpiderButton,
+spiderButton=ctk.CTkButton(canvas,
 text='Statistics Graph',command=spider_graph_button,
 width=200,fg_color=lapisLazuli,hover_color=lapisLazuli,
-text_color='#FFFFFF')
+text_color='#FFFFFF',corner_radius=5)
+spiderButton.pack(side="left",anchor="n",padx=10,pady=10)
+spiderButton.pack_forget()
 
 pokeNameLabel=ctk.CTkLabel(framePokeDetails,text="No Name Set")
 pokeTypeLabel=ctk.CTkLabel(framePokeDetails,text="No Type Set")
