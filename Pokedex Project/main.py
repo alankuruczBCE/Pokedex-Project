@@ -11,6 +11,7 @@ from PIL import ImageFont
 from tkinter import ttk
 import tkinter as tk
 import customtkinter as ctk
+import numpy as np
 
 #Read the csv and put into a variable
 pokedex="pokemon_data.csv"
@@ -90,10 +91,23 @@ def filter_pokemon_():
 def on_button_click(
     name,type1,type2,hp,atk,defense,spAtk,spDef,spd,gen,leg):
     global currentScene
+    global nameX,type1X,type2X,hpX,atkX,defenseX,spAtkX,spDefX,spdX,genX,legX
     remove_pokemon_()
     currentScene="PokeDetails"
     framePokeDetails.pack(side="top",anchor="ne",padx=10,pady=10)
     count=0
+    nameX=name
+    type1X=type1
+    type2X=type2
+    hpX=hp
+    atkX=atk
+    defenseX=defense
+    spAtkX=spAtk
+    spDefX=spDef
+    spdX=spd
+    genX=gen
+    legX=leg
+
     for i in statButtons:
         var = statButtons[count]
         count+=1
@@ -113,6 +127,7 @@ def on_button_click(
     pokeGenLabel.configure(text="Generation: "+str(gen))
     pokeLegendLabel.configure(text="Legendary?  "+str(leg))
     canvas.configure(scrollregion=canvas.bbox("all"))
+    spider_graph_button()
     #HERE ALSO MAKE THE GRAPH BUTTON THAT MAKES A POLYGON GRAPH WITH STATS OPEN UP!!!
     #WAKE UP LOOK
     # WAKE UP LOOK
@@ -196,11 +211,29 @@ def graph_():
     plt.show()
 
 
+def spider_graph_button():
+    labels=['Attack','Defense','Sp. Attack','Sp. Defense','Speed']
+    values=[atkX,defenseX,spAtkX,spDefX,spdX]
+    numLabels=len(labels)
+
+    angle=np.linspace(0,2*np.pi,numLabels,endpoint=False).tolist()
+
+    values+=values[:1]
+    angle+=angle[:1]
+
+    fig,spider=plt.subplots(figsize=(6,6),subplot_kw=dict(polar=True))
+    spider.fill(angle,values,color='blue',alpha=0.25)
+    spider.plot(angle,values,color='blue',linewidth=2)
+    spider.set_xticks(angle[:-1])
+    spider.set_xticklabels(labels)
+    plt.show()
+
 def poke_type_change(choice):
     global pokeChoice
     pokeChoice = choice
 
 root=ctk.CTk()
+root.resizable(False,True)
 root.title("Pokedex")
 root.geometry("600x600")
 root.configure(bg=periwinkle,fg_color=periwinkle)
@@ -239,7 +272,7 @@ pokeTypeSelector.set("Type")
 canvas=tk.Canvas(root,bg=periwinkle,borderwidth=0,highlightthickness=0)
 canvas.pack(fill="both",expand=True,anchor="n")
 
-backFrame=ctk.CTkFrame(root, corner_radius=0, bg_color="#000000")
+backFrame=ctk.CTkFrame(root, corner_radius=0, fg_color="#000000")
 backFrame.pack(fill = "x")
 backButton=ctk.CTkButton(backFrame,text="Home",command=back_button_,
                         width = 200,fg_color=lavender,hover_color=lavender,
