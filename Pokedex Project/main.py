@@ -36,6 +36,7 @@ def filter_pokemon_():
     if currentScene=="PokeDetails":
         pokeNameLabel.pack_forget()
         framePokeDetails.pack_forget()
+        frameSpiderButton.pack_forget()
     currentScene="PokeList"
     query=entry.get().strip().lower()
     if pokeChoice=="Type":
@@ -95,6 +96,7 @@ def on_button_click(
     remove_pokemon_()
     currentScene="PokeDetails"
     framePokeDetails.pack(side="top",anchor="ne",padx=10,pady=10)
+    frameSpiderButton.pack(side='top',anchor='nw',padx=10,pady=10)
     count=0
     nameX=name
     type1X=type1
@@ -127,7 +129,6 @@ def on_button_click(
     pokeGenLabel.configure(text="Generation: "+str(gen))
     pokeLegendLabel.configure(text="Legendary?  "+str(leg))
     canvas.configure(scrollregion=canvas.bbox("all"))
-    spider_graph_button()
     #HERE ALSO MAKE THE GRAPH BUTTON THAT MAKES A POLYGON GRAPH WITH STATS OPEN UP!!!
     #WAKE UP LOOK
     # WAKE UP LOOK
@@ -160,6 +161,7 @@ def back_button_():
         typeDistButton.pack(pady=10,padx=10,side="top",anchor="w")
         print("detail")
         framePokeDetails.pack_forget()
+        frameSpiderButton.pack_forget()
         remove_pokemon_()
         canvas.update_idletasks()
         currentScene="Main"
@@ -292,8 +294,17 @@ lambda e:canvas.configure(scrollregion=canvas.bbox("all")))
 root.bind_all("<MouseWheel>",on_mouse_wheel)
 
 framePokeDetails=ctk.CTkFrame(canvas)
-framePokeDetails.pack(side="top",anchor="nw",padx=10,pady=10)
+framePokeDetails.pack(side="top",anchor="ne",padx=10,pady=10)
 framePokeDetails.pack_forget()
+
+frameSpiderButton=ctk.CTkFrame(canvas)
+frameSpiderButton.pack(side="top",anchor="nw",padx=10,pady=10)
+frameSpiderButton.pack_forget()
+
+spiderButton=ctk.CTkButton(frameSpiderButton,
+text='Statistics Graph',command=spider_graph_button,
+width=200,fg_color=lapisLazuli,hover_color=lapisLazuli,
+text_color='#FFFFFF')
 
 pokeNameLabel=ctk.CTkLabel(framePokeDetails,text="No Name Set")
 pokeTypeLabel=ctk.CTkLabel(framePokeDetails,text="No Type Set")
