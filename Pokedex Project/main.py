@@ -129,21 +129,7 @@ def on_button_click(
     pokeGenLabel.configure(text="Generation: "+str(gen))
     pokeLegendLabel.configure(text="Legendary?  "+str(leg))
     canvas.configure(scrollregion=canvas.bbox("all"))
-    #HERE ALSO MAKE THE GRAPH BUTTON THAT MAKES A POLYGON GRAPH WITH STATS OPEN UP!!!
-    #WAKE UP LOOK
-    # WAKE UP LOOK
-    # WAKE UP LOOK
-    # WAKE UP LOOK
-    # WAKE UP LOOK
-    # WAKE UP LOOK
-    # WAKE UP LOOK
-    # WAKE UP LOOK
-    # WAKE UP LOOK
-    # WAKE UP LOOK
-    # WAKE UP LOOK
-    # WAKE UP LOOK
-    # WAKE UP LOOK
-    # WAKE UP LOOK
+
 
 def on_mouse_wheel(event):
     canvas.yview_scroll(int(-1*(event.delta/120)),"units")
@@ -258,9 +244,8 @@ entry=ctk.CTkEntry(searchFrame,width=370)
 entry.pack(side="left",padx=5,pady=5,expand=True,fill="both")
 
 searchButton=ctk.CTkButton(searchFrame,text="Search",
-                             command=filter_pokemon_,
-                          width=100,fg_color=lavender,
-                           text_color="#000000",hover_color=lavender)
+command=filter_pokemon_,width=100,fg_color=lavender,
+text_color="#000000",hover_color=lavender)
 searchButton.pack(side="left",padx=5,pady=5,fill="both")
 
 pokeTypeSelector=ctk.CTkOptionMenu(searchFrame,values=["Name",
@@ -282,12 +267,12 @@ backButton=ctk.CTkButton(backFrame,text="Home",command=back_button_,
 backButton.pack(side="bottom",pady=10)
 
 frameButtons=ctk.CTkFrame(canvas,
-height=600,fg_color=periwinkle,border_width=0,)
+height=600,fg_color=periwinkle,border_width=0)
 
 scrollbar=ctk.CTkScrollbar(canvas,command=canvas.yview)
 scrollbar.pack(side="right",fill="y")
 canvas.configure(yscrollcommand=scrollbar.set)
-canvas.create_window((0,0),window=frameButtons,anchor="center")
+canvas.create_window((0,0),window=frameButtons,anchor="n")
 
 frameButtons.bind("<Configure>",
 lambda e:canvas.configure(scrollregion=canvas.bbox("all")))
@@ -320,14 +305,11 @@ statButtons = [pokeNameLabel,pokeTypeLabel,pokeType2Label,
                pokeSpAtkLabel,pokeSpDefLabel,pokeSpeedLabel,
                pokeGenLabel,pokeLegendLabel]
 
-
 frameButtons.configure(height=600,width=600)
 
-
-
-
 typeDistButton=ctk.CTkButton(canvas,
-text="Type Distribution Graph",command=graph_)
+text="Type Distribution Graph",command=graph_,
+fg_color=lapisLazuli,hover_color=lapisLazuli)
 typeDistButton.pack(pady=10,padx=10,side="top",anchor="w")
 
 root.mainloop()
