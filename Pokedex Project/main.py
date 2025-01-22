@@ -17,7 +17,12 @@ pokedex="pokemon_data.csv"
 data=pd.read_csv(pokedex)
 currentScene="Main"
 pokeChoice="Type"
-
+lapisLazuli = "#003D5B"
+periwinkle = "#B3C2F2"
+richBlack = "#0C1821"
+lavender = "#CCC9DC"
+lavenderDark = "#928DAE"
+airForceBlue = "#61819D"
 
 def hide_me(event):
     event.widget.pack_forget()
@@ -26,7 +31,6 @@ def hide_me(event):
 def filter_pokemon_():
     global currentScene
     global frameButtons
-    frameButtons.configure(height=600,width=600)
     typeDistButton.pack_forget()
     if currentScene=="PokeDetails":
         pokeNameLabel.pack_forget()
@@ -58,8 +62,8 @@ def filter_pokemon_():
         spd=row["Speed"]
         gen=row["Generation"]
         leg=row["Legendary"]
-        button=ctk.CTkButton(frameButtons,fg_color="#147285",
-        corner_radius=3,text=name,width=40,
+        button=ctk.CTkButton(frameButtons,fg_color=lapisLazuli,
+        corner_radius=8,text=name,width=40, text_color="white",
             command=lambda
                 name=name,
                 type1=type1,
@@ -93,7 +97,7 @@ def on_button_click(
     for i in statButtons:
         var = statButtons[count]
         count+=1
-        var.pack(padx=5,pady=5)
+        var.pack(padx=15,pady=5)
     pokeNameLabel.configure(text="Name: "+name)
     pokeTypeLabel.configure(text="Type: "+type1)
     if type2:
@@ -136,7 +140,6 @@ def combobox_callback(choice):
 def back_button_():
     global currentScene
     if currentScene=="Main":
-        frameButtons.configure(height=600,width=600)
         print()
     if currentScene=="PokeDetails":
         typeDistButton.pack(pady=10,padx=10,side="top",anchor="w")
@@ -147,7 +150,6 @@ def back_button_():
         currentScene="Main"
     if currentScene=="PokeList":
         typeDistButton.pack(pady=10,padx=10,side="top",anchor="w")
-        frameButtons.configure(height=600,width=600)
         remove_pokemon_()
         currentScene="Main"
     if currentScene=="Graph":
@@ -201,14 +203,10 @@ def poke_type_change(choice):
 root=ctk.CTk()
 root.title("Pokedex")
 root.geometry("600x600")
-root.configure(bg="#b34448",fg_color="#b34448")
+root.configure(bg=periwinkle,fg_color=periwinkle)
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 
-richBlack = "#0C1821"
-lavender = "#CCC9DC"
-lavenderDark = "#928DAE"
-airForceBlue = "#61819D"
 #set theme here!!!!
 fontPath="JUST Sans Regular.otf"
 customFont=ImageFont.truetype(fontPath,10)
@@ -220,54 +218,47 @@ searchFrame=ctk.CTkFrame(root,fg_color="#000000",bg_color="#000000",border_width
 searchFrame.pack(fill="x")
 label=ctk.CTkLabel(searchFrame,text="Pokedex")
 label.pack(pady=10)
-#Create the entry field
 
 entry=ctk.CTkEntry(searchFrame,width=370)
-entry.pack(side="left",padx=5,pady=5)
+entry.pack(side="left",padx=5,pady=5,expand=True,fill="both")
 
 searchButton=ctk.CTkButton(searchFrame,text="Search",
                              command=filter_pokemon_,
                           width=100,fg_color=lavender,
-                           text_color="#000000")
-searchButton.pack(side="left",padx=5,pady=5)
+                           text_color="#000000",hover_color=lavender)
+searchButton.pack(side="left",padx=5,pady=5,fill="both")
 
 pokeTypeSelector=ctk.CTkOptionMenu(searchFrame,values=["Name",
                 "Type"],command=poke_type_change,width=100,
                 fg_color=lavender, text_color="#000000",
                 button_color=lavenderDark,
                                    button_hover_color=lavenderDark)
-pokeTypeSelector.pack(side="left",padx=5,pady=5)
+pokeTypeSelector.pack(side="left",padx=5,pady=5,fill="both")
 pokeTypeSelector.set("Type")
-#comboboxVar = ttk.StringVar(value="Type")
-#combobox = tk.ComboBox(searchFrame, values=["Type", "Name"],
-                       #    command=combobox_callback,
-                        #   width = 200)
-#combobox.pack(side = "left", padx = (10,0))
 
-#comboboxVar.set("Type")
-
-#######################THIS IS TKINTER DO A CASCADE INSTEAD OF THIS!!!!!!!!!!!!!
-
-canvas=tk.Canvas(root,bg="#b34448",borderwidth=0,highlightthickness=0)
-canvas.pack(fill="both",expand=True)
+canvas=tk.Canvas(root,bg=periwinkle,borderwidth=0,highlightthickness=0)
+canvas.pack(fill="both",expand=True,anchor="n")
 
 backFrame=ctk.CTkFrame(root, corner_radius=0, bg_color="#000000")
 backFrame.pack(fill = "x")
 backButton=ctk.CTkButton(backFrame,text="Home",command=back_button_,
-                        width = 200,)
+                        width = 200,fg_color=lavender,hover_color=lavender,
+                         text_color="black")
 backButton.pack(side="bottom",pady=10)
 
-frameButtons=ctk.CTkFrame(canvas,width=600,height=600,fg_color="#b34448",border_width=0)
+frameButtons=ctk.CTkFrame(canvas,
+height=600,fg_color=periwinkle,border_width=0,)
 
 scrollbar=ctk.CTkScrollbar(canvas,command=canvas.yview)
 scrollbar.pack(side="right",fill="y")
 canvas.configure(yscrollcommand=scrollbar.set)
-canvas.create_window((0,0),window=frameButtons,anchor="nw",width=600)
+canvas.create_window((0,0),window=frameButtons,anchor="center")
 
-frameButtons.bind("<Configure>",lambda e:canvas.configure(scrollregion=canvas.bbox("all")))
+frameButtons.bind("<Configure>",
+lambda e:canvas.configure(scrollregion=canvas.bbox("all")))
 root.bind_all("<MouseWheel>",on_mouse_wheel)
 
-framePokeDetails=ctk.CTkFrame(canvas,width=600,height=600)
+framePokeDetails=ctk.CTkFrame(canvas)
 framePokeDetails.pack(side="top",anchor="nw",padx=10,pady=10)
 framePokeDetails.pack_forget()
 
@@ -292,7 +283,9 @@ frameButtons.configure(height=600,width=600)
 
 
 
-typeDistButton=ctk.CTkButton(canvas,text="Type Distribution Graph",command=graph_)
+
+typeDistButton=ctk.CTkButton(canvas,
+text="Type Distribution Graph",command=graph_)
 typeDistButton.pack(pady=10,padx=10,side="top",anchor="w")
 
 root.mainloop()
