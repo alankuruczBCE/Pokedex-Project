@@ -1,4 +1,6 @@
 #section for imports
+import random
+from random import randint
 
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -30,6 +32,7 @@ def filter_pokemon_():
     #pack_forget removes the item from the UI, to bring it back, you
     #need to use pack() again and previous commands will not be remembered
     typeDistButton.pack_forget()
+    randomPokemonButton.pack_forget()
     if currentScene=="PokeDetails":
         pokeNameLabel.pack_forget()
         framePokeDetails.pack_forget()
@@ -119,6 +122,7 @@ def on_button_click(
     #adds UI elements
     framePokeDetails.pack(side="right",anchor="n",padx=10,pady=10)
     spiderButton.pack(side="left",anchor="n",padx=10,pady=10)
+    randomPokemonButton.pack(side="left",pady=10,anchor="n")
     count=0
     nameX=name
     type1X=type1
@@ -153,6 +157,7 @@ def on_button_click(
     pokeGenLabel.configure(text="Generation: "+str(gen))
     pokeLegendLabel.configure(text="Legendary?  "+str(leg))
     canvas.configure(scrollregion=canvas.bbox("all"))
+    typeDistButton.pack_forget()
 
 
 #this is for scrolling
@@ -169,6 +174,7 @@ def back_button_():
         print()
     if currentScene=="PokeDetails":
         typeDistButton.pack(pady=10,padx=10,side="top",anchor="w")
+        randomPokemonButton.pack(pady=10,padx=10,side="top",anchor="w")
         print("detail")
         framePokeDetails.pack_forget()
         spiderButton.pack_forget()
@@ -252,6 +258,24 @@ def spider_graph_button():
 def poke_type_change(choice):
     global pokeChoice
     pokeChoice = choice
+
+
+def random_pokemon_():
+    randomNum=random.randint(1,802)
+    row = data.iloc[randomNum]
+    name = row["Name"]
+    type1 = row["Type 1"]
+    type2 = row.get("Type 2", None)
+    hp = row["HP"]
+    atk = row["Attack"]
+    defense = row["Defense"]
+    spAtk = row["Sp. Atk"]
+    spDef = row["Sp. Def"]
+    spd = row["Speed"]
+    gen = row["Generation"]
+    leg = row["Legendary"]
+    on_button_click(name,type1,type2,hp,atk,defense,spAtk,spDef,spd,gen,leg)
+    currentScene="PokeDetails"
 
 
 #--------------------------------UI------------------------------------------#
@@ -342,7 +366,7 @@ framePokeDetails.pack_forget()
 #same thing here but for the spider graph button
 spiderButton=ctk.CTkButton(canvas,
 text='Statistics Graph',command=spider_graph_button,
-width=200,fg_color=lapisLazuli,hover_color=lapisLazuli,
+width=130,fg_color=lapisLazuli,hover_color=lapisLazuli,
 text_color='#FFFFFF',corner_radius=5)
 spiderButton.pack(side="left",anchor="n",padx=10,pady=10)
 spiderButton.pack_forget()
@@ -371,8 +395,13 @@ frameButtons.configure(height=600,width=600)
 #creates the bar chart button
 typeDistButton=ctk.CTkButton(canvas,
 text="Type Distribution Graph",command=graph_,
-fg_color=lapisLazuli,hover_color=lapisLazuli)
+fg_color=lapisLazuli,hover_color=lapisLazuli,)
 typeDistButton.pack(pady=10,padx=10,side="top",anchor="w")
+
+#creates the random pokemon button
+randomPokemonButton=ctk.CTkButton(canvas,text="Random Pokemon",
+command=random_pokemon_,fg_color=lapisLazuli,hover_color=lapisLazuli)
+randomPokemonButton.pack(pady=10,padx=10,side="top",anchor="w")
 
 #this is needed for the window to run
 root.mainloop()
