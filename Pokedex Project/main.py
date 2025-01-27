@@ -42,15 +42,19 @@ def filter_pokemon_():
     query=entry.get().strip().lower()
     #if the criteria is type, go by type
     if pokeChoice=="Type":
-        filteredData=data[
-            data['Type 1'].str.lower().str.contains(query) |
-            data['Type 2'].str.lower().str.contains(query)
-        ]
+        if pokeChoice.isalpha():
+            filteredData=data[
+                data['Type 1'].str.lower().str.contains(query) |
+                data['Type 2'].str.lower().str.contains(query)
+            ]
+
     #if it isn't that, go by the name
     elif pokeChoice=="Name":
-        filteredData=data[
-            data['Name'].str.lower().str.contains(query)
-        ]
+        if pokeChoice.isalpha():
+            filteredData=data[
+                data['Name'].str.lower().str.contains(query)
+            ]
+
     elif pokeChoice=="Generation":
         queryInt=int(query)
         filteredData=data[
