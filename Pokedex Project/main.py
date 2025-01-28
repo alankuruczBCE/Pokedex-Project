@@ -1,7 +1,6 @@
 #section for imports
 import random
-from random import randint
-
+from PIL import Image
 import pandas as pd
 from matplotlib import pyplot as plt
 import tkinter as tk
@@ -23,6 +22,8 @@ richBlack="#0C1821"
 lavender="#CCC9DC"
 lavenderDark = "#928DAE"
 airForceBlue = "#61819D"
+
+pokeBallImage="Poké_Ball_icon.svg.png"
 
 #This function filters the data file, finding pokemon under your query and
 #criteria selected (pokeChoice) and then creates buttons for each pokemon
@@ -311,6 +312,9 @@ ctk.set_default_color_theme("blue")
 #placing ui elements by themselves works, but Frames make it easier to keep
 #elements in one place and next to each other. It's not for everything though.
 
+image = ctk.CTkImage(dark_image=Image.open(pokeBallImage),
+light_image=Image.open(pokeBallImage),size=(40,40))
+
 #Frame for the top bar
 searchFrame=ctk.CTkFrame(root,fg_color="#000000",bg_color="#000000",
 border_width=0)
@@ -319,25 +323,26 @@ searchFrame.pack(fill="x")
 label=ctk.CTkLabel(searchFrame,text="Pokedex")
 label.pack(pady=(5,0))
 
-#the searchbar (the coup de grass or whatever)
-entry=ctk.CTkEntry(searchFrame,width=370)
-entry.pack(side="left",padx=5,pady=5,expand=True,fill="both")
-
-#creates the search button and gives it a function.
-searchButton=ctk.CTkButton(searchFrame,text="Search",
-command=filter_pokemon_,width=100,fg_color=lavender,
-text_color="#000000",hover_color=lavender)
-searchButton.pack(side="left",padx=5,pady=5,fill="both")
-
 #the crteria selector appears!
 pokeTypeSelector=ctk.CTkOptionMenu(searchFrame,values=["Name",
-                "Type","Generation","Pokedex. ID"],command=poke_type_change,width=100,
+                "Type","Generation","Pokedex. ID"],command=poke_type_change,width=60,
                 fg_color=lavender, text_color="#000000",
-                button_color=lavenderDark,
-                                   button_hover_color=lavenderDark)
+                button_color=lavender,
+                button_hover_color=lavender,
+                height = 5)
 pokeTypeSelector.pack(side="left",padx=5,pady=5,fill="both")
 #sets the default criteria to type
 pokeTypeSelector.set("Type")
+
+#the searchbar (the coup de grass or whatever)
+entry=ctk.CTkEntry(searchFrame,width=250)
+entry.pack(side="left",padx=5,pady=5,expand=True,fill="both")
+
+#creates the search button and gives it a function.
+searchButton=ctk.CTkButton(searchFrame,text="",
+command=filter_pokemon_,width=40,fg_color=lavender,
+text_color="#000000",hover_color=lavender,image=image)
+searchButton.pack(side="left",padx=5,pady=5,fill="both")
 
 #THIS HAS CAUSED ME IMMENSE SUFFERING.
 #anyway its a canvas and you can scroll with it.
