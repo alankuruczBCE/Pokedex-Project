@@ -42,26 +42,38 @@ def filter_pokemon_():
     query=entry.get().strip().lower()
     #if the criteria is type, go by type
     if pokeChoice=="Type":
-        if pokeChoice.isalpha():
+        if query.isalpha():
             filteredData=data[
                 data['Type 1'].str.lower().str.contains(query) |
                 data['Type 2'].str.lower().str.contains(query)
             ]
+        else:
+            #if query is number, search by pokedex number
+            filteredData=data.iloc[[query]]
+            print("Zuckled!")
 
     #if it isn't that, go by the name
     elif pokeChoice=="Name":
-        if pokeChoice.isalpha():
+        if query.isalpha():
             filteredData=data[
-                data['Name'].str.lower().str.contains(query)
-            ]
+            data['Name'].str.lower().str.contains(query)]
+        else:
+            filteredData=data.iloc[[query]]
+            print("Zuckled!")
 
     elif pokeChoice=="Generation":
-        queryInt=int(query)
-        filteredData=data[
-            data['Generation'] == queryInt
-        ]
+        if query.isnumeric():
+            queryInt=int(query)
+            filteredData=data[
+            data['Generation'] == queryInt]
+
+    elif pokeChoice=="Pokedex. ID":
+        if query.isnumeric():
+            filteredData=data.iloc[[query]]
+            print("Zuckled!")
+
     filteredData=filteredData.drop_duplicates(subset=[
-        'Name','Type 1','Type 2'])
+    'Name','Type 1','Type 2'])
 
     #Destroys all buttons from previous query
     remove_pokemon_()
@@ -86,7 +98,7 @@ def filter_pokemon_():
         #and when clicked, it uses the variables that correspond to it
         #in its function
         button=ctk.CTkButton(frameButtons,fg_color=lapisLazuli,
-        corner_radius=8,text=name,width=40, text_color="white",
+        corner_radius=20,text=name,width=300, text_color="white",
             command=lambda
                 name=name,
                 type1=type1,
@@ -319,7 +331,7 @@ searchButton.pack(side="left",padx=5,pady=5,fill="both")
 
 #the crteria selector appears!
 pokeTypeSelector=ctk.CTkOptionMenu(searchFrame,values=["Name",
-                "Type","Generation"],command=poke_type_change,width=100,
+                "Type","Generation","Pokedex. ID"],command=poke_type_change,width=100,
                 fg_color=lavender, text_color="#000000",
                 button_color=lavenderDark,
                                    button_hover_color=lavenderDark)
