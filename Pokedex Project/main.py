@@ -6,6 +6,7 @@ from matplotlib import pyplot as plt
 import tkinter as tk
 import customtkinter as ctk
 import numpy as np
+from pandas import value_counts
 
 #Read the csv and put into a variable
 pokedex="pokemon_data.csv"
@@ -33,6 +34,7 @@ def filter_pokemon_():
     #pack_forget removes the item from the UI, to bring it back, you
     #need to use pack() again and previous commands will not be remembered
     typeDistButton.pack_forget()
+    hpDistButton.pack_forget()
     randomPokemonButton.pack_forget()
     if currentScene=="PokeDetails":
         pokeNameLabel.pack_forget()
@@ -175,7 +177,7 @@ def on_button_click(
     pokeLegendLabel.configure(text="Legendary?  "+str(leg))
     canvas.configure(scrollregion=canvas.bbox("all"))
     typeDistButton.pack_forget()
-
+    hpDistButton.pack_forget()
 
 #this is for scrolling
 def on_mouse_wheel(event):
@@ -191,6 +193,7 @@ def back_button_():
         print()
     if currentScene=="PokeDetails":
         typeDistButton.pack(pady=10,padx=10,side="top",anchor="w")
+        hpDistButton.pack(pady=10, padx=10, side="top", anchor="w")
         randomPokemonButton.pack(pady=10,padx=10,side="top",anchor="w")
         print("detail")
         framePokeDetails.pack_forget()
@@ -200,6 +203,7 @@ def back_button_():
         currentScene="Main"
     if currentScene=="PokeList":
         typeDistButton.pack(pady=10,padx=10,side="top",anchor="w")
+        hpDistButton.pack(pady=10, padx=10, side="top", anchor="w")
         remove_pokemon_()
         currentScene="Main"
 
@@ -210,7 +214,7 @@ def remove_pokemon_():
         widget.destroy()
 
 #this one needs a genius to figure it out
-def graph_():
+def graph_type_():
     #this combines type 1 and type 2
     typesCombined=pd.concat([data["Type 1"],data["Type 2"]])
     #this counts how many of each type exists
@@ -247,6 +251,13 @@ def graph_():
     plt.xlabel('Type',fontsize=12)
     plt.ylabel('Count',fontsize=12)
     #display the graph
+    plt.show()
+
+def graph_hp_():
+    #this combines type 1 and type 2
+    health=(data["HP"])
+
+    ax1=data.plot.scatter(x='#',y='HP',title="Health by Pokemon")
     plt.show()
 
 #this one opens a spider graph
@@ -415,9 +426,13 @@ frameButtons.configure(height=600,width=600)
 
 #creates the bar chart button
 typeDistButton=ctk.CTkButton(canvas,
-text="Type Distribution Graph",command=graph_,
+text="Type Distribution Graph",command=graph_type_,
 fg_color=lapisLazuli,hover_color=lapisLazuli,)
 typeDistButton.pack(pady=10,padx=10,side="top",anchor="w")
+HpDistButton=ctk.CTkButton(canvas,
+text="HP Graph",command=graph_hp_,
+fg_color=lapisLazuli,hover_color=lapisLazuli,)
+HpDistButton.pack(pady=10,padx=10,side="top",anchor="w")
 
 #creates the random pokemon button
 randomPokemonButton=ctk.CTkButton(canvas,text="Random Pokemon",
