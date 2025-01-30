@@ -34,7 +34,7 @@ def filter_pokemon_():
     #pack_forget removes the item from the UI, to bring it back, you
     #need to use pack() again and previous commands will not be remembered
     typeDistButton.pack_forget()
-    hpDistButton.pack_forget()
+    HpDistButton.pack_forget()
     randomPokemonButton.pack_forget()
     if currentScene=="PokeDetails":
         pokeNameLabel.pack_forget()
@@ -177,7 +177,7 @@ def on_button_click(
     pokeLegendLabel.configure(text="Legendary?  "+str(leg))
     canvas.configure(scrollregion=canvas.bbox("all"))
     typeDistButton.pack_forget()
-    hpDistButton.pack_forget()
+    HpDistButton.pack_forget()
 
 #this is for scrolling
 def on_mouse_wheel(event):
@@ -193,7 +193,7 @@ def back_button_():
         print()
     if currentScene=="PokeDetails":
         typeDistButton.pack(pady=10,padx=10,side="top",anchor="w")
-        hpDistButton.pack(pady=10, padx=10, side="top", anchor="w")
+        HpDistButton.pack(pady=10, padx=10, side="top", anchor="w")
         randomPokemonButton.pack(pady=10,padx=10,side="top",anchor="w")
         print("detail")
         framePokeDetails.pack_forget()
@@ -203,7 +203,7 @@ def back_button_():
         currentScene="Main"
     if currentScene=="PokeList":
         typeDistButton.pack(pady=10,padx=10,side="top",anchor="w")
-        hpDistButton.pack(pady=10, padx=10, side="top", anchor="w")
+        HpDistButton.pack(pady=10, padx=10, side="top", anchor="w")
         remove_pokemon_()
         currentScene="Main"
 
