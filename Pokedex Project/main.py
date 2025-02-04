@@ -1,4 +1,4 @@
-#section for imports
+#---------------------------------------IMPORTS-------------------------------
 import random
 from PIL import Image
 import pandas as pd
@@ -8,10 +8,11 @@ import customtkinter as ctk
 import numpy as np
 from pandas import value_counts
 
+#---------------------------------VARIABLE DECLARATION------------------------
+
 #Read the csv and put into a variable
 pokedex="pokemon_data.csv"
 data=pd.read_csv(pokedex)
-
 #Sets the current scene to main. it's opened on main by default.
 currentScene="Main"
 #Sets the default criteria to Type instead of Name for searching.
@@ -23,12 +24,17 @@ richBlack="#0C1821"
 lavender="#CCC9DC"
 lavenderDark = "#928DAE"
 airForceBlue = "#61819D"
-
+#Image for the search button, might need to make the fact it's for
+#searching a bit clearer but I don't think that's important
 pokeBallImage="Poké_Ball_icon.svg.png"
+
 
 #This function filters the data file, finding pokemon under your query and
 #criteria selected (pokeChoice) and then creates buttons for each pokemon
 #which when clicked, send you into a menu detailing their statistics.
+
+#------------------------------------FUNCTIONS--------------------------------
+
 def filter_pokemon_():
     global currentScene
     #pack_forget removes the item from the UI, to bring it back, you
@@ -44,36 +50,32 @@ def filter_pokemon_():
     #removes empty spaces and lowercases the query
     query=entry.get().strip().lower()
     #if the criteria is type, go by type
-    if pokeChoice=="Type":
-        if query.isalpha():
-            filteredData=data[
-                data['Type 1'].str.lower().str.contains(query) |
-                data['Type 2'].str.lower().str.contains(query)
-            ]
-        else:
-            #if query is number, search by pokedex number
-            filteredData=data.iloc[[query]]
-            print("Zuckled!")
-
-    #if it isn't that, go by the name
-    elif pokeChoice=="Name":
-        if query.isalpha():
-            filteredData=data[
-            data['Name'].str.lower().str.contains(query)]
-        else:
-            filteredData=data.iloc[[query]]
-            print("Zuckled!")
-
-    elif pokeChoice=="Generation":
-        if query.isnumeric():
-            queryInt=int(query)
-            filteredData=data[
-            data['Generation'] == queryInt]
-
-    elif pokeChoice=="Pokedex. ID":
-        if query.isnumeric():
-            filteredData=data.iloc[[query]]
-            print("Zuckled!")
+    match pokeChoice:
+        case "Type":
+            if query.isalpha():
+                filteredData=data[
+                    data['Type 1'].str.lower().str.contains(query) |
+                    data['Type 2'].str.lower().str.contains(query)
+                ]
+            else:
+                #if query is number, search by pokedex number
+                filteredData=data.iloc[[query]]
+                print("Zuckled!")
+        case "Name":
+            if query.isalpha():
+                filteredData = data[
+                    data['Name'].str.lower().str.contains(query)]
+            else:
+                filteredData = data.iloc[[query]]
+                print("Zuckled!")
+        case "Generation":
+            if query.isnumeric():
+                filteredData = data[
+                    data['Generation'] == query]
+        case "Pokedex. ID":
+            if query.isnumeric():
+                filteredData=data.iloc[[query]]
+                print("Zuckled!")
 
     filteredData=filteredData.drop_duplicates(subset=[
     'Name','Type 1','Type 2'])
@@ -128,6 +130,7 @@ def filter_pokemon_():
     canvas.pack( fill="both",expand=True)
     canvas.configure(scrollregion=canvas.bbox("all"))
 
+
 #when a button created by filter_pokemon is clicked, this is called
 def on_button_click(
     name,type1,type2,hp,atk,defense,spAtk,spDef,spd,gen,leg):
@@ -179,6 +182,7 @@ def on_button_click(
     typeDistButton.pack_forget()
     HpDistButton.pack_forget()
 
+
 #this is for scrolling
 def on_mouse_wheel(event):
     canvas.yview_scroll(int(-1*(event.delta/120)),"units")
@@ -204,6 +208,7 @@ def back_button_():
     if currentScene=="PokeList":
         typeDistButton.pack(pady=10,padx=10,side="top",anchor="w")
         HpDistButton.pack(pady=10, padx=10, side="top", anchor="w")
+        randomPokemonButton.pack(pady=10, padx=10, side="top", anchor="w")
         remove_pokemon_()
         currentScene="Main"
 
@@ -212,6 +217,7 @@ def back_button_():
 def remove_pokemon_():
     for widget in frameButtons.winfo_children():
         widget.destroy()
+
 
 #this one needs a genius to figure it out
 def graph_type_():
@@ -253,12 +259,14 @@ def graph_type_():
     #display the graph
     plt.show()
 
+
 def graph_hp_():
     #this combines type 1 and type 2
     health=(data["HP"])
 
     ax1=data.plot.scatter(x='#',y='HP',title="Health by Pokemon")
     plt.show()
+
 
 #this one opens a spider graph
 #(i know, cool right?)
@@ -281,6 +289,7 @@ def spider_graph_button():
     spider.set_xticks(angle[:-1])
     spider.set_xticklabels(labels)
     plt.show()
+
 
 #just stuff for the criteria selector
 def poke_type_change(choice):
@@ -306,7 +315,7 @@ def random_pokemon_():
     currentScene="PokeDetails"
 
 
-#--------------------------------UI------------------------------------------#
+#--------------------------------------UI-------------------------------------
 #lis it a bird, is it a plane?
 #no, its the text 'ui' in all caps with dashes!
 
