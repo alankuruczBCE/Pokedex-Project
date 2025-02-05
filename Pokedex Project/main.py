@@ -193,24 +193,25 @@ def on_mouse_wheel(event):
 #its a lot faster than just removing everything that could be there
 def back_button_():
     global currentScene
-    if currentScene=="Main":
-        print()
-    if currentScene=="PokeDetails":
-        typeDistButton.pack(pady=10,padx=10,side="top",anchor="w")
-        HpDistButton.pack(pady=10, padx=10, side="top", anchor="w")
-        randomPokemonButton.pack(pady=10,padx=10,side="top",anchor="w")
-        print("detail")
-        framePokeDetails.pack_forget()
-        spiderButton.pack_forget()
-        remove_pokemon_()
-        canvas.update_idletasks()
-        currentScene="Main"
-    if currentScene=="PokeList":
-        typeDistButton.pack(pady=10,padx=10,side="top",anchor="w")
-        HpDistButton.pack(pady=10, padx=10, side="top", anchor="w")
-        randomPokemonButton.pack(pady=10, padx=10, side="top", anchor="w")
-        remove_pokemon_()
-        currentScene="Main"
+    match currentScene:
+        case "Main":
+            print("uh oh. gubuntu")
+        case "PokeDetails":
+            typeDistButton.pack(pady=10, padx=10, side="top", anchor="w")
+            HpDistButton.pack(pady=10, padx=10, side="top", anchor="w")
+            randomPokemonButton.pack(pady=10, padx=10, side="top", anchor="w")
+            print("detail")
+            framePokeDetails.pack_forget()
+            spiderButton.pack_forget()
+            remove_pokemon_()
+            canvas.update_idletasks()
+            currentScene = "Main"
+        case "PokeList":
+            typeDistButton.pack(pady=10,padx=10,side="top",anchor="w")
+            HpDistButton.pack(pady=10, padx=10, side="top", anchor="w")
+            randomPokemonButton.pack(pady=10, padx=10, side="top", anchor="w")
+            remove_pokemon_()
+            currentScene="Main"
 
 
 #removes all buttons created by filter_pokemon
