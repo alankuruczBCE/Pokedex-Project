@@ -248,10 +248,12 @@ def graph_type_():
         'Ghost': 'purple',
         'Ice': 'lightblue'
     }
+    #does the colours idk man
     colour2=[colours.get(type_, 'grey')for type_ in valueCount.index]
     #sets the size of the window
     #matplotlib WHY ON THIS PLANET would you do it in inches and not px???????
     plt.figure(figsize=(12,8))
+    #actually makes bars
     valueCount.plot(kind='bar',color=colour2)
     #set the title and labels
     plt.title('Count of Each Type (Type 1 + Type 2)',fontsize=16)
